@@ -12,7 +12,7 @@ type Logger struct {
 }
 
 func (l *Logger) Log(message string) {
-	l.output.WriteString(fmt.Sprintf("%s : %s", l.now().Format(time.RFC3339), message))
+	l.output.WriteString(fmt.Sprintf("%s :: %s", l.now().Format(time.RFC3339), message))
 }
 
 func NewLogger(output *bytes.Buffer) *Logger {

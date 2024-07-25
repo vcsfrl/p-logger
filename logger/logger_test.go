@@ -38,7 +38,7 @@ func (f *LoggerFixture) TestLog() {
 	logger.now = mockNow()
 	logger.Log("test")
 
-	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z : test")
+	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z :: test")
 }
 
 // Mock the time.Now function
