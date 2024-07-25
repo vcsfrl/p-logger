@@ -41,6 +41,7 @@ func (f *LoggerFixture) TestLog() {
 	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z : test")
 }
 
+// Mock the time.Now function
 func mockNow() func() time.Time {
 	return func() time.Time {
 		return time.Date(2024, 5, 1, 3, 12, 3, 0, time.UTC)
