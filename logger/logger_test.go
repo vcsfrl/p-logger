@@ -1,6 +1,8 @@
 package logger
 
 import (
+	"bytes"
+	"github.com/smarty/assertions/should"
 	"testing"
 
 	"github.com/smarty/gunit"
@@ -22,6 +24,16 @@ func (f *LoggerFixture) Teardown() {
 
 }
 
-func (f *LoggerFixture) TestCreateInstance() {
-	NewLogger()
+func (f *LoggerFixture) TestConstructor() {
+	logger := NewLogger(nil)
+
+	f.So(logger, should.NotBeNil)
+}
+
+func (f *LoggerFixture) TestLog() {
+	output := new(bytes.Buffer)
+	logger := NewLogger(output)
+	logger.Log("test")
+
+	f.So(output.String(), should.Equal, "test")
 }
