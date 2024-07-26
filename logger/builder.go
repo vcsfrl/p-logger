@@ -1,9 +1,21 @@
 package logger
 
-type Config struct {
+type ConfigWriter struct {
+	Name       string
+	Attributes map[string]string
 }
 
-func BuildFromConfig(config Config) *Logger {
+type Config struct {
+	Writers []ConfigWriter
+}
 
-	return NewLogger(nil)
+func BuildFromConfig(config Config) (*Logger, error) {
+
+	for _, configWriter := range config.Writers {
+		if configWriter.Name == "text" {
+
+		}
+	}
+
+	return NewLogger(nil), nil
 }

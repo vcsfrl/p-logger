@@ -1,7 +1,6 @@
 package logger
 
 import (
-	"bytes"
 	"github.com/smarty/assertions/should"
 	"github.com/smarty/gunit"
 	"testing"
@@ -15,9 +14,29 @@ type MultiOutputWriterFixture struct {
 	*gunit.Fixture
 }
 
-func (f *MultiOutputWriterFixture) TestWrite() {
-	buffer1 := new(bytes.Buffer)
-	buffer2 := new(bytes.Buffer)
+func (f *MultiOutputWriterFixture) TestWriteSingle() {
+	buffer1 := new(MemoryWriter)
+
+	writer1 := &TextOutputWriter{writer: buffer1}
+
+	multiWriter := NewMultiOutputWriter(writer1)
+
+	multiWriter.Write(LogMessage{
+		Timestamp: mockNow()(),
+		Severity:  SeverityDebug,
+		Message: Message{
+			Content: "test message",
+		},
+	})
+
+	defer multiWriter.Close()
+
+	f.So(buffer1.String(), should.Equal, "2024-05-01T03:12:03Z :: DEBUG :: test message :: [] :: [] \n")
+}
+
+func (f *MultiOutputWriterFixture) TestWriteTwo() {
+	buffer1 := new(MemoryWriter)
+	buffer2 := new(MemoryWriter)
 
 	writer1 := &TextOutputWriter{writer: buffer1}
 	writer2 := &TextOutputWriter{writer: buffer2}
@@ -31,6 +50,8 @@ func (f *MultiOutputWriterFixture) TestWrite() {
 			Content: "test message",
 		},
 	})
+
+	defer multiWriter.Close()
 
 	f.So(buffer1.String(), should.Equal, "2024-05-01T03:12:03Z :: DEBUG :: test message :: [] :: [] \n")
 	f.So(buffer2.String(), should.Equal, "2024-05-01T03:12:03Z :: DEBUG :: test message :: [] :: [] \n")

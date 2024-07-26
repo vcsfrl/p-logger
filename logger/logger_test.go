@@ -1,7 +1,6 @@
 package logger
 
 import (
-	"bytes"
 	"github.com/smarty/assertions/should"
 	"github.com/smarty/gunit"
 	"testing"
@@ -13,12 +12,12 @@ func TestLogger(t *testing.T) {
 
 type LoggerFixture struct {
 	*gunit.Fixture
-	writer *bytes.Buffer
+	writer *MemoryWriter
 	logger *Logger
 }
 
 func (f *LoggerFixture) Setup() {
-	f.writer = new(bytes.Buffer)
+	f.writer = new(MemoryWriter)
 	f.logger = NewLogger(&TextOutputWriter{writer: f.writer})
 	// Mock the time.Now function
 	f.logger.now = mockNow()
@@ -26,6 +25,7 @@ func (f *LoggerFixture) Setup() {
 
 func (f *LoggerFixture) Teardown() {
 	f.writer.Reset()
+	_ = f.logger.Close()
 }
 
 func (f *LoggerFixture) TestConstructorDefaults() {
