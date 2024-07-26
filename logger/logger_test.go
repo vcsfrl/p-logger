@@ -13,14 +13,19 @@ func TestLogger(t *testing.T) {
 
 type LoggerFixture struct {
 	*gunit.Fixture
+	writer *bytes.Buffer
+	logger *Logger
 }
 
 func (f *LoggerFixture) Setup() {
-
+	f.writer = new(bytes.Buffer)
+	f.logger = NewLogger(&TextOutputWriter{writer: f.writer})
+	// Mock the time.Now function
+	f.logger.now = mockNow()
 }
 
 func (f *LoggerFixture) Teardown() {
-
+	f.writer.Reset()
 }
 
 func (f *LoggerFixture) TestConstructor() {
@@ -30,12 +35,7 @@ func (f *LoggerFixture) TestConstructor() {
 }
 
 func (f *LoggerFixture) TestLog() {
-	output := new(bytes.Buffer)
-	logger := NewLogger(output)
-
-	// Mock the time.Now function
-	logger.now = mockNow()
-	logger.Log(SeverityInfo, Message{
+	f.logger.Log(SeverityInfo, Message{
 		Content: "test",
 		Attributes: map[string]string{
 			"attr-key-1": "attr-value1",
@@ -44,26 +44,13 @@ func (f *LoggerFixture) TestLog() {
 		Tags: []string{"tag1", "tag2"},
 	})
 
-	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test :: [attr-key-1:attr-value1 attr-key-2:attr-value2] :: [tag1 tag2] \n")
-	output.Reset()
-
-	// Test with default severity used on invalid param
-	logger.Log("", Message{
-		Content: "test1",
-	})
-	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test1 :: [] :: [] \n")
+	f.So(f.writer.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test :: [attr-key-1:attr-value1 attr-key-2:attr-value2] :: [tag1 tag2] \n")
 }
 
 func (f *LoggerFixture) TestLogDefaultSeverity() {
-	output := new(bytes.Buffer)
-	logger := NewLogger(output)
-
-	// Mock the time.Now function
-	logger.now = mockNow()
-
 	// Test severity default on invalid value.
-	logger.Log("", Message{
+	f.logger.Log("", Message{
 		Content: "test1",
 	})
-	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test1 :: [] :: [] \n")
+	f.So(f.writer.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test1 :: [] :: [] \n")
 }

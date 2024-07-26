@@ -1,15 +1,12 @@
 package logger
 
 import (
-	"bytes"
-	"fmt"
 	"slices"
-	"strings"
 	"time"
 )
 
 type Logger struct {
-	outputWriter *bytes.Buffer
+	outputWriter OutputWriter
 	now          func() time.Time
 }
 
@@ -22,24 +19,16 @@ func (l *Logger) Log(severity Severity, message Message) {
 	}
 
 	// Build the log message. Timestamp is set by the logger.
-	logeMessage := LogMessage{
+	logMessage := LogMessage{
 		Timestamp: l.now(),
 		Severity:  severity,
 		Message:   message,
 	}
 
-	l.outputWriter.WriteString(
-		fmt.Sprintf(
-			"%s :: %s :: %s :: %s :: %v \n",
-			logeMessage.Timestamp.Format(time.RFC3339),
-			logeMessage.Severity,
-			logeMessage.Content,
-			strings.TrimLeft(fmt.Sprint(logeMessage.Attributes), "map"),
-			logeMessage.Tags,
-		))
+	l.outputWriter.Write(logMessage)
 }
 
-func NewLogger(output *bytes.Buffer) *Logger {
+func NewLogger(output OutputWriter) *Logger {
 	return &Logger{
 		outputWriter: output,
 		now:          time.Now,
