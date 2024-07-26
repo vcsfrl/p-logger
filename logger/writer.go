@@ -45,6 +45,17 @@ type MultiOutputWriter struct {
 // Write sends the log message to all writers concurrently.
 func (m *MultiOutputWriter) Write(message LogMessage) {
 	var wg sync.WaitGroup
+
+	if len(m.writers) == 0 {
+		return
+	}
+
+	// If there is only one writer, we can avoid the overhead of goroutines.
+	if len(m.writers) == 1 {
+		m.writers[0].Write(message)
+		return
+	}
+
 	for _, writer := range m.writers {
 		wg.Add(1)
 		go func() {
