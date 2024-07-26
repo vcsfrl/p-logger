@@ -13,7 +13,7 @@ type Logger struct {
 	now          func() time.Time
 }
 
-// Log builds a logMessage and sends it to the outputWriter writer.
+// Log builds a LogMessage and sends it to the outputWriter writer.
 // If the severity is not valid, it will default to SeverityDefault.
 // This method should not return any errors.
 func (l *Logger) Log(severity Severity, message Message) {
@@ -22,7 +22,7 @@ func (l *Logger) Log(severity Severity, message Message) {
 	}
 
 	// Build the log message. Timestamp is set by the logger.
-	logeMessage := logMessage{
+	logeMessage := LogMessage{
 		Timestamp: l.now(),
 		Severity:  severity,
 		Message:   message,

@@ -21,9 +21,9 @@ type Message struct {
 	Tags       []string
 }
 
-// logMessage is the struct that will be used to log messages.
-// It is not exported because it should be used only internally.
-type logMessage struct {
+// LogMessage is the struct that will be used to log messages.
+// This is exported because users can define OutputWriters outside this library.
+type LogMessage struct {
 	Timestamp time.Time
 	Severity  Severity
 	Message
