@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"slices"
+	"strings"
 	"time"
 )
 
@@ -25,7 +26,9 @@ const (
 var severities = []Severity{SeverityDefault, SeverityDebug, SeverityInfo, SeverityWarning, SeverityError}
 
 type Message struct {
-	Content string
+	Content    string
+	Attributes map[string]string
+	Tags       []string
 }
 
 type logMessage struct {
@@ -49,7 +52,15 @@ func (l *Logger) Log(severity Severity, message Message) {
 		Message:   message,
 	}
 
-	l.output.WriteString(fmt.Sprintf("%s :: %s :: %s \n", logeMessage.Timestamp.Format(time.RFC3339), logeMessage.Severity, logeMessage.Content))
+	l.output.WriteString(
+		fmt.Sprintf(
+			"%s :: %s :: %s :: %s :: %v \n",
+			logeMessage.Timestamp.Format(time.RFC3339),
+			logeMessage.Severity,
+			logeMessage.Content,
+			strings.TrimLeft(fmt.Sprint(logeMessage.Attributes), "map"),
+			logeMessage.Tags,
+		))
 }
 
 func NewLogger(output *bytes.Buffer) *Logger {

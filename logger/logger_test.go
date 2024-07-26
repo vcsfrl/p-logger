@@ -38,16 +38,21 @@ func (f *LoggerFixture) TestLog() {
 	logger.now = mockNow()
 	logger.Log(SeverityInfo, Message{
 		Content: "test",
+		Attributes: map[string]string{
+			"attr-key-1": "attr-value1",
+			"attr-key-2": "attr-value2",
+		},
+		Tags: []string{"tag1", "tag2"},
 	})
 
-	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test \n")
+	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test :: [attr-key-1:attr-value1 attr-key-2:attr-value2] :: [tag1 tag2] \n")
 	output.Reset()
 
 	// Test with default severity used on invalid param
 	logger.Log("", Message{
 		Content: "test1",
 	})
-	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test1 \n")
+	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test1 :: [] :: [] \n")
 }
 
 // Mocks
