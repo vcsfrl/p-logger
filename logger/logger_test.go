@@ -34,14 +34,24 @@ func (f *LoggerFixture) TestLog() {
 	output := new(bytes.Buffer)
 	logger := NewLogger(output)
 
-	// Mock the logger
+	// Mock the time.Now function
 	logger.now = mockNow()
-	logger.Log("test")
+	logger.Log(SeverityInfo, Message{
+		Content: "test",
+	})
 
-	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z :: test")
+	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test \n")
+	output.Reset()
+
+	// Test with default severity used on invalid param
+	logger.Log("", Message{
+		Content: "test1",
+	})
+	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test1 \n")
 }
 
-// Mock the time.Now function
+// Mocks
+
 func mockNow() func() time.Time {
 	return func() time.Time {
 		return time.Date(2024, 5, 1, 3, 12, 3, 0, time.UTC)
