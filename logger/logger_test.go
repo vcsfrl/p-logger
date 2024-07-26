@@ -55,6 +55,20 @@ func (f *LoggerFixture) TestLog() {
 	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test1 :: [] :: [] \n")
 }
 
+func (f *LoggerFixture) TestLogDefaultSeverity() {
+	output := new(bytes.Buffer)
+	logger := NewLogger(output)
+
+	// Mock the time.Now function
+	logger.now = mockNow()
+
+	// Test severity default on invalid value.
+	logger.Log("", Message{
+		Content: "test1",
+	})
+	f.So(output.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test1 :: [] :: [] \n")
+}
+
 // Mocks
 
 func mockNow() func() time.Time {

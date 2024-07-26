@@ -9,8 +9,8 @@ import (
 )
 
 type Logger struct {
-	output *bytes.Buffer
-	now    func() time.Time
+	outputWriter *bytes.Buffer
+	now          func() time.Time
 }
 
 type Severity string
@@ -37,7 +37,7 @@ type logMessage struct {
 	Message
 }
 
-// Log builds a logMessage and sends it to the output writer..
+// Log builds a logMessage and sends it to the outputWriter writer.
 // If the severity is not valid, it will default to SeverityDefault.
 // This method should not return any errors.
 func (l *Logger) Log(severity Severity, message Message) {
@@ -52,7 +52,7 @@ func (l *Logger) Log(severity Severity, message Message) {
 		Message:   message,
 	}
 
-	l.output.WriteString(
+	l.outputWriter.WriteString(
 		fmt.Sprintf(
 			"%s :: %s :: %s :: %s :: %v \n",
 			logeMessage.Timestamp.Format(time.RFC3339),
@@ -65,7 +65,7 @@ func (l *Logger) Log(severity Severity, message Message) {
 
 func NewLogger(output *bytes.Buffer) *Logger {
 	return &Logger{
-		output: output,
-		now:    time.Now,
+		outputWriter: output,
+		now:          time.Now,
 	}
 }
