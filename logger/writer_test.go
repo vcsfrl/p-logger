@@ -26,12 +26,12 @@ func (f *MultiOutputWriterFixture) TestWrite() {
 
 	multiWriter.Write(LogMessage{
 		Timestamp: mockNow()(),
-		Severity:  SeverityInfo,
+		Severity:  SeverityDebug,
 		Message: Message{
 			Content: "test message",
 		},
 	})
 
-	f.So(buffer1.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test message :: [] :: [] \n")
-	f.So(buffer2.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test message :: [] :: [] \n")
+	f.So(buffer1.String(), should.Equal, "2024-05-01T03:12:03Z :: DEBUG :: test message :: [] :: [] \n")
+	f.So(buffer2.String(), should.Equal, "2024-05-01T03:12:03Z :: DEBUG :: test message :: [] :: [] \n")
 }
