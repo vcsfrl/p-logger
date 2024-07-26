@@ -13,30 +13,6 @@ type Logger struct {
 	now          func() time.Time
 }
 
-type Severity string
-
-const (
-	SeverityDebug   Severity = "DEBUG"
-	SeverityInfo    Severity = "INFO"
-	SeverityWarning Severity = "WARN"
-	SeverityError   Severity = "ERROR"
-	SeverityDefault Severity = SeverityInfo
-)
-
-var severities = []Severity{SeverityDefault, SeverityDebug, SeverityInfo, SeverityWarning, SeverityError}
-
-type Message struct {
-	Content    string
-	Attributes map[string]string
-	Tags       []string
-}
-
-type logMessage struct {
-	Timestamp time.Time
-	Severity  Severity
-	Message
-}
-
 // Log builds a logMessage and sends it to the outputWriter writer.
 // If the severity is not valid, it will default to SeverityDefault.
 // This method should not return any errors.
