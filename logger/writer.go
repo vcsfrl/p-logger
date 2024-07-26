@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -34,4 +35,27 @@ func (t *TextOutputWriter) Write(logMessage LogMessage) {
 			logMessage.Tags,
 		),
 	))
+}
+
+// MultiOutputWriter is an OutputWriter that writes logs to multiple writers concurrently.
+type MultiOutputWriter struct {
+	writers []OutputWriter
+}
+
+// Write sends the log message to all writers concurrently.
+func (m *MultiOutputWriter) Write(message LogMessage) {
+	var wg sync.WaitGroup
+	for _, writer := range m.writers {
+		wg.Add(1)
+		go func() {
+			writer.Write(message)
+			wg.Done()
+		}()
+	}
+	wg.Wait()
+}
+
+// NewMultiOutputWriter constructor for MultiOutputWriter.
+func NewMultiOutputWriter(writers ...OutputWriter) *MultiOutputWriter {
+	return &MultiOutputWriter{writers: writers}
 }
