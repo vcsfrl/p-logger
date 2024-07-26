@@ -16,6 +16,8 @@ type OutputWriter interface {
 	io.Closer
 }
 
+// TEXT WRITER
+
 // TextOutputWriter is an OutputWriter that writes logs in text format to an io.Writer.
 type TextOutputWriter struct {
 	writer io.WriteCloser
@@ -23,10 +25,6 @@ type TextOutputWriter struct {
 
 func (t *TextOutputWriter) Close() error {
 	return t.writer.Close()
-}
-
-func NewTextStdoutWriter() *TextOutputWriter {
-	return &TextOutputWriter{writer: os.Stdout}
 }
 
 func (t *TextOutputWriter) Write(logMessage LogMessage) {
@@ -46,6 +44,26 @@ func (t *TextOutputWriter) Write(logMessage LogMessage) {
 		),
 	))
 }
+
+func NewTextStdoutWriter(attributes map[string]string) (OutputWriter, error) {
+	return &TextOutputWriter{writer: os.Stdout}, nil
+}
+
+func NewTextFileWriter(attributes map[string]string) (OutputWriter, error) {
+	path, ok := attributes["path"]
+	if !ok {
+		return nil, fmt.Errorf("path attribute is required for text_file writer")
+	}
+
+	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return nil, fmt.Errorf("could not open log file: %w", err)
+	}
+
+	return &TextOutputWriter{writer: file}, nil
+}
+
+// MULTI WRITER
 
 // MultiOutputWriter is an OutputWriter that writes logs to multiple writers concurrently.
 type MultiOutputWriter struct {
