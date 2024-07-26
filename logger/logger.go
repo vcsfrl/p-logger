@@ -31,6 +31,7 @@ func (l *Logger) Log(severity Severity, message Message) {
 
 func NewLogger(output OutputWriter) *Logger {
 	if output == nil {
+		// By default, if no output writer is provided, we will write to stdout in text format.
 		output = &TextOutputWriter{writer: os.Stdout}
 	}
 

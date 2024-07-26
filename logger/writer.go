@@ -13,6 +13,7 @@ type OutputWriter interface {
 	Write(message LogMessage)
 }
 
+// TextOutputWriter is an OutputWriter that writes logs in text format to an io.Writer.
 type TextOutputWriter struct {
 	writer io.Writer
 }
