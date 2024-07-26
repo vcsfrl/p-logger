@@ -28,10 +28,11 @@ func (f *LoggerFixture) Teardown() {
 	f.writer.Reset()
 }
 
-func (f *LoggerFixture) TestConstructor() {
+func (f *LoggerFixture) TestConstructorDefaults() {
 	logger := NewLogger(nil)
 
 	f.So(logger, should.NotBeNil)
+	f.So(logger.outputWriter, should.NotBeNil)
 }
 
 func (f *LoggerFixture) TestLog() {

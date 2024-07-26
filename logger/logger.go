@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"os"
 	"slices"
 	"time"
 )
@@ -29,6 +30,10 @@ func (l *Logger) Log(severity Severity, message Message) {
 }
 
 func NewLogger(output OutputWriter) *Logger {
+	if output == nil {
+		output = &TextOutputWriter{writer: os.Stdout}
+	}
+
 	return &Logger{
 		outputWriter: output,
 		now:          time.Now,
