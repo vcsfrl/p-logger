@@ -3,6 +3,8 @@ package logger
 import (
 	"github.com/smarty/assertions/should"
 	"github.com/smarty/gunit"
+	"os"
+	"reflect"
 	"testing"
 )
 
@@ -30,9 +32,13 @@ func (f *LoggerFixture) Teardown() {
 
 func (f *LoggerFixture) TestConstructorDefaults() {
 	logger := NewLogger(nil)
+	writer := logger.outputWriter.(*TextOutputWriter)
 
+	// Check if the default writer is os.Stdout
 	f.So(logger, should.NotBeNil)
 	f.So(logger.outputWriter, should.NotBeNil)
+	f.So(reflect.TypeOf(logger.outputWriter).String(), should.Equal, "*logger.TextOutputWriter")
+	f.So(writer.writer, should.Equal, os.Stdout)
 }
 
 func (f *LoggerFixture) TestLog() {
