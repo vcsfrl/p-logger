@@ -25,12 +25,12 @@ func Build(config Config) (*Logger, error) {
 	for _, configWriter := range config.Writers {
 		constructorFunction, ok := OutputWriterSetup[configWriter.Name]
 		if !ok {
-			return nil, fmt.Errorf("unknown writer: %s", configWriter.Name)
+			return nil, fmt.Errorf("BUILD LOGGER: unknown writer: %s", configWriter.Name)
 		}
 
 		outputWriter, err := constructorFunction(configWriter.Attributes)
 		if err != nil {
-			return nil, fmt.Errorf("could not create writer: %w", err)
+			return nil, fmt.Errorf("BUILD LOGGER: could not create writer: %w", err)
 		}
 
 		outputWriters = append(outputWriters, outputWriter)
