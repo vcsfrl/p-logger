@@ -1,6 +1,10 @@
 package logger
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+)
 
 func Build(config Config) (*Logger, error) {
 	var outputWriters []OutputWriter
@@ -10,7 +14,7 @@ func Build(config Config) (*Logger, error) {
 			return nil, fmt.Errorf("BUILD LOGGER: unknown writer: %s", configWriter.Name)
 		}
 
-		outputWriter, err := constructorFunction(configWriter.Attributes)
+		outputWriter, err := constructorFunction(configWriter.Params)
 		if err != nil {
 			return nil, fmt.Errorf("BUILD LOGGER: could not create writer: %w", err)
 		}
@@ -28,4 +32,18 @@ func Build(config Config) (*Logger, error) {
 	}
 
 	return NewLogger(nil), nil
+}
+
+func BuildFromJson(jsonFileName string) (*Logger, error) {
+	jsonData, err := os.ReadFile(jsonFileName)
+	if err != nil {
+		return nil, fmt.Errorf("BUILD LOGGER: could not read json file: %w", err)
+	}
+	var config Config
+
+	if err = json.Unmarshal(jsonData, &config); err != nil {
+		return nil, fmt.Errorf("BUILD LOGGER: could not unmarshal json: %w", err)
+	}
+
+	return Build(config)
 }

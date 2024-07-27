@@ -1,0 +1,13 @@
+{
+  "writers": [
+    {
+      "name": "text_file",
+      "params": {
+        "path": "./../var/log/test.log"
+      }
+    },
+    {
+      "name": "text_stdout"
+    }
+  ]
+}

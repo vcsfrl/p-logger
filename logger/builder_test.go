@@ -47,7 +47,7 @@ func (f *BuilderFixture) TestBuildOneOutputWriter() {
 		Writers: []ConfigWriter{
 			{
 				Name: "text_file",
-				Attributes: map[string]interface{}{
+				Params: map[string]interface{}{
 					"path": "./../var/log/test.log",
 				},
 			},
@@ -71,7 +71,7 @@ func (f *BuilderFixture) TestBuildTwoOutputWriters() {
 		Writers: []ConfigWriter{
 			{
 				Name: "text_file",
-				Attributes: map[string]interface{}{
+				Params: map[string]interface{}{
 					"path": "./../var/log/test.log",
 				},
 			}, {
@@ -84,8 +84,6 @@ func (f *BuilderFixture) TestBuildTwoOutputWriters() {
 	defer logger.Close()
 
 	f.So(logger, should.NotBeNil)
-
-	f.So(logger, should.NotBeNil)
 	f.So(err, should.BeNil)
 	f.So(reflect.TypeOf(logger.outputWriter).String(), should.Equal, "*logger.MultiOutputWriter")
 	multiOutputWriter := logger.outputWriter.(*MultiOutputWriter)
@@ -96,4 +94,33 @@ func (f *BuilderFixture) TestBuildTwoOutputWriters() {
 
 	stdoutWriter := multiOutputWriter.writers[1].(*TextOutputWriter)
 	f.So(stdoutWriter.writer, should.Equal, os.Stdout)
+}
+
+func (f *BuilderFixture) TestBuildFromJson() {
+	logger, err := BuildFromJson("testdata/example_config_valid.json")
+	defer logger.Close()
+
+	f.So(err, should.BeNil)
+	f.So(logger, should.NotBeNil)
+	f.So(reflect.TypeOf(logger.outputWriter).String(), should.Equal, "*logger.MultiOutputWriter")
+	multiOutputWriter := logger.outputWriter.(*MultiOutputWriter)
+
+	fileWriter := multiOutputWriter.writers[0].(*TextOutputWriter)
+	f.So(reflect.TypeOf(fileWriter.writer).String(), should.Equal, "*os.File")
+	f.So(fileWriter.writer, should.NotEqual, os.Stdout)
+
+	stdoutWriter := multiOutputWriter.writers[1].(*TextOutputWriter)
+	f.So(stdoutWriter.writer, should.Equal, os.Stdout)
+}
+
+func (f *BuilderFixture) TestBuildFromJsonInvalidData() {
+	logger, err := BuildFromJson("testdata/example_config_invalid.json")
+
+	f.So(err, should.NotBeNil)
+	f.So(logger, should.BeNil)
+
+	logger, err = BuildFromJson("testdata/example_config_not_exists.json")
+
+	f.So(err, should.NotBeNil)
+	f.So(logger, should.BeNil)
 }

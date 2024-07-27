@@ -30,11 +30,11 @@ type LogMessage struct {
 }
 
 type ConfigWriter struct {
-	Name       string
-	Attributes map[string]any
+	Name   string         `json:"name"`
+	Params map[string]any `json:"params"`
 }
 
 // Config is a configuration structure for building the logger.
 type Config struct {
-	Writers []ConfigWriter
+	Writers []ConfigWriter `json:"writers"`
 }
