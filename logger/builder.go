@@ -2,28 +2,15 @@ package logger
 
 import "fmt"
 
-var OutputWriterSetup map[string]OutputWriterConstructor
-
 func init() {
-	OutputWriterSetup = map[string]OutputWriterConstructor{
-		"text_stdout": NewTextStdoutWriter,
-		"text_file":   NewTextFileWriter,
-	}
-}
-
-type ConfigWriter struct {
-	Name       string
-	Attributes map[string]any
-}
-
-type Config struct {
-	Writers []ConfigWriter
+	RegisterOutputWriter("text_stdout", NewTextStdoutWriter)
+	RegisterOutputWriter("text_file", NewTextFileWriter)
 }
 
 func Build(config Config) (*Logger, error) {
 	var outputWriters []OutputWriter
 	for _, configWriter := range config.Writers {
-		constructorFunction, ok := OutputWriterSetup[configWriter.Name]
+		constructorFunction, ok := outputWriterSetup[configWriter.Name]
 		if !ok {
 			return nil, fmt.Errorf("BUILD LOGGER: unknown writer: %s", configWriter.Name)
 		}
