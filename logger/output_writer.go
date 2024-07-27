@@ -56,12 +56,12 @@ func NewTextStdoutWriter(attributes map[string]any) (OutputWriter, error) {
 func NewTextFileWriter(attributes map[string]any) (OutputWriter, error) {
 	path, ok := attributes["path"]
 	if !ok {
-		return nil, fmt.Errorf("path attribute is required for text_file writer")
+		return nil, fmt.Errorf("NEW TEXT WRITER: path attribute is required for text_file writer")
 	}
 
 	file, err := os.OpenFile(fmt.Sprintf("%s", path), os.O_APPEND|os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
-		return nil, fmt.Errorf("NEW WRITEcould not open log file: %w", err)
+		return nil, fmt.Errorf("NEW TEXT WRITER: could not open log file: %w", err)
 	}
 
 	return &TextOutputWriter{writer: file}, nil
