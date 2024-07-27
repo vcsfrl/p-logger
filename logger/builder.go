@@ -36,7 +36,11 @@ func Build(config Config) (*Logger, error) {
 		outputWriters = append(outputWriters, outputWriter)
 	}
 
-	if len(outputWriters) > 0 {
+	if len(outputWriters) == 1 {
+		return NewLogger(outputWriters[0]), nil
+	}
+
+	if len(outputWriters) > 1 {
 		return NewLogger(&MultiOutputWriter{writers: outputWriters}), nil
 	}
 

@@ -41,3 +41,59 @@ func (f *BuilderFixture) TestBuildEmptyConfig() {
 	f.So(reflect.TypeOf(logger.outputWriter).String(), should.Equal, "*logger.TextOutputWriter")
 	f.So(writer.writer, should.Equal, os.Stdout)
 }
+
+func (f *BuilderFixture) TestBuildOneOutputWriter() {
+	config := Config{
+		Writers: []ConfigWriter{
+			{
+				Name: "text_file",
+				Attributes: map[string]interface{}{
+					"path": "./../var/log/test.log",
+				},
+			},
+		},
+	}
+
+	logger, err := Build(config)
+	defer logger.Close()
+
+	f.So(logger, should.NotBeNil)
+
+	f.So(logger, should.NotBeNil)
+	f.So(err, should.BeNil)
+	f.So(reflect.TypeOf(logger.outputWriter).String(), should.Equal, "*logger.TextOutputWriter")
+	writer := logger.outputWriter.(*TextOutputWriter)
+	f.So(reflect.TypeOf(writer.writer).String(), should.Equal, "*os.File")
+}
+
+func (f *BuilderFixture) TestBuildTwoOutputWriters() {
+	config := Config{
+		Writers: []ConfigWriter{
+			{
+				Name: "text_file",
+				Attributes: map[string]interface{}{
+					"path": "./../var/log/test.log",
+				},
+			}, {
+				Name: "text_stdout",
+			},
+		},
+	}
+
+	logger, err := Build(config)
+	defer logger.Close()
+
+	f.So(logger, should.NotBeNil)
+
+	f.So(logger, should.NotBeNil)
+	f.So(err, should.BeNil)
+	f.So(reflect.TypeOf(logger.outputWriter).String(), should.Equal, "*logger.MultiOutputWriter")
+	multiOutputWriter := logger.outputWriter.(*MultiOutputWriter)
+
+	fileWriter := multiOutputWriter.writers[0].(*TextOutputWriter)
+	f.So(reflect.TypeOf(fileWriter.writer).String(), should.Equal, "*os.File")
+	f.So(fileWriter.writer, should.NotEqual, os.Stdout)
+
+	stdoutWriter := multiOutputWriter.writers[1].(*TextOutputWriter)
+	f.So(stdoutWriter.writer, should.Equal, os.Stdout)
+}
