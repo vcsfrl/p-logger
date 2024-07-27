@@ -36,6 +36,7 @@ func Build(config Config) (*Logger, error) {
 		outputWriters = append(outputWriters, outputWriter)
 	}
 
+	// If there is only one writer, we can avoid the overhead of MultiOutputWriter.
 	if len(outputWriters) == 1 {
 		return NewLogger(outputWriters[0]), nil
 	}
