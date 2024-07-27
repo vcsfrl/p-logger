@@ -19,10 +19,10 @@ func RegisterOutputWriter(name string, constructor OutputWriterConstructor) {
 	outputWriterSetup[name] = constructor
 }
 
-func GetOutputWriterConstructor(key string) (OutputWriterConstructor, bool) {
+func GetOutputWriterConstructor(name string) (OutputWriterConstructor, bool) {
 	outputWriterSetupLock.RLock()
 	defer outputWriterSetupLock.RUnlock()
-	value, exists := outputWriterSetup[key]
+	value, exists := outputWriterSetup[name]
 
 	return value, exists
 
