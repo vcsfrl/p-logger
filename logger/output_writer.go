@@ -16,6 +16,8 @@ type OutputWriter interface {
 	io.Closer
 }
 
+type OutputWriterConstructor func(attributes map[string]any) (OutputWriter, error)
+
 // TEXT WRITER
 
 // TextOutputWriter is an OutputWriter that writes logs in text format to an io.Writer.
@@ -45,17 +47,19 @@ func (t *TextOutputWriter) Write(logMessage LogMessage) {
 	))
 }
 
-func NewTextStdoutWriter(attributes map[string]string) (OutputWriter, error) {
+// NewTextStdoutWriter constructor for TextOutputWriter that writes to stdout.
+func NewTextStdoutWriter(attributes map[string]any) (OutputWriter, error) {
 	return &TextOutputWriter{writer: os.Stdout}, nil
 }
 
-func NewTextFileWriter(attributes map[string]string) (OutputWriter, error) {
+// NewTextFileWriter constructor for TextOutputWriter that writes to a file.
+func NewTextFileWriter(attributes map[string]any) (OutputWriter, error) {
 	path, ok := attributes["path"]
 	if !ok {
 		return nil, fmt.Errorf("path attribute is required for text_file writer")
 	}
 
-	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	file, err := os.OpenFile(fmt.Sprintf("%s", path), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return nil, fmt.Errorf("could not open log file: %w", err)
 	}

@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"bytes"
+	"github.com/smarty/assertions/should"
 	"github.com/smarty/gunit"
 	"testing"
 )
@@ -12,16 +12,14 @@ func TestBuilder(t *testing.T) {
 
 type BuilderFixture struct {
 	*gunit.Fixture
-	writer *bytes.Buffer
 }
 
 func (f *BuilderFixture) TestBuildFromConfig() {
-	//config := Config{}
-	//
-	//logger, err := BuildFromConfig(config)
-	////defer logger.Close()
-	//
-	//f.So(logger, should.NotBeNil)
-	//f.So(err, should.BeNil)
+	config := Config{}
 
+	logger, err := Build(config)
+	//defer logger.Close()
+
+	f.So(logger, should.NotBeNil)
+	f.So(err, should.BeNil)
 }
