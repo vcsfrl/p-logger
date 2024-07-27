@@ -5,7 +5,7 @@ import "fmt"
 func Build(config Config) (*Logger, error) {
 	var outputWriters []OutputWriter
 	for _, configWriter := range config.Writers {
-		constructorFunction, ok := outputWriterSetup[configWriter.Name]
+		constructorFunction, ok := GetOutputWriterConstructor(configWriter.Name)
 		if !ok {
 			return nil, fmt.Errorf("BUILD LOGGER: unknown writer: %s", configWriter.Name)
 		}
