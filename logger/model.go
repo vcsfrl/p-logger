@@ -28,3 +28,13 @@ type LogMessage struct {
 	Severity  Severity
 	Message
 }
+
+type ConfigWriter struct {
+	Name       string
+	Attributes map[string]any
+}
+
+// Config is a configuration structure for building the logger.
+type Config struct {
+	Writers []ConfigWriter
+}
