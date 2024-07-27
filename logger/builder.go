@@ -2,11 +2,6 @@ package logger
 
 import "fmt"
 
-func init() {
-	RegisterOutputWriter("text_stdout", NewTextStdoutWriter)
-	RegisterOutputWriter("text_file", NewTextFileWriter)
-}
-
 func Build(config Config) (*Logger, error) {
 	var outputWriters []OutputWriter
 	for _, configWriter := range config.Writers {
