@@ -95,6 +95,30 @@ func (f *BuilderFixture) TestBuildTwoOutputWriters() {
 	stdoutWriter := multiOutputWriter.writers[1].(*TextOutputWriter)
 	f.So(stdoutWriter.writer, should.Equal, os.Stdout)
 }
+func (f *BuilderFixture) TestBuildMinSeverityAndDefaultTags() {
+	config := Config{
+		Writers: []ConfigWriter{
+			{
+				Name: "text_file",
+				Params: map[string]interface{}{
+					"path": "./../var/log/test.log",
+				},
+			}, {
+				Name: "text_stdout",
+			},
+		},
+		MinSeverity: "WARN",
+		DefaultTags: []string{"tag1", "tag2"},
+	}
+
+	logger, err := Build(config)
+	defer logger.Close()
+
+	f.So(logger, should.NotBeNil)
+	f.So(err, should.BeNil)
+	f.So(logger.MinSeverity, should.Equal, SeverityWarning)
+	f.So(logger.DefaultTags, should.Resemble, []string{"tag1", "tag2"})
+}
 
 func (f *BuilderFixture) TestBuildFromJson() {
 	logger, err := BuildFromJson("testdata/example_config_valid.json")
@@ -111,6 +135,9 @@ func (f *BuilderFixture) TestBuildFromJson() {
 
 	stdoutWriter := multiOutputWriter.writers[1].(*TextOutputWriter)
 	f.So(stdoutWriter.writer, should.Equal, os.Stdout)
+
+	f.So(logger.MinSeverity, should.Equal, SeverityWarning)
+	f.So(logger.DefaultTags, should.Resemble, []string{"tag1", "tag2", "tag3"})
 }
 
 func (f *BuilderFixture) TestBuildFromJsonInvalidData() {

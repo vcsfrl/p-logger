@@ -22,16 +22,25 @@ func Build(config Config) (*Logger, error) {
 		outputWriters = append(outputWriters, outputWriter)
 	}
 
+	var outputWriter OutputWriter
+
 	// If there is only one writer, we can avoid the overhead of MultiOutputWriter.
 	if len(outputWriters) == 1 {
-		return NewLogger(outputWriters[0]), nil
+		outputWriter = outputWriters[0]
 	}
 
 	if len(outputWriters) > 1 {
-		return NewLogger(&MultiOutputWriter{writers: outputWriters}), nil
+		outputWriter = &MultiOutputWriter{writers: outputWriters}
 	}
 
-	return NewLogger(nil), nil
+	logger := NewLogger(outputWriter)
+
+	if minSeverity, isSet := severityMap[config.MinSeverity]; isSet {
+		logger.MinSeverity = minSeverity
+	}
+	logger.DefaultTags = config.DefaultTags
+
+	return logger, nil
 }
 
 func BuildFromJson(jsonFileName string) (*Logger, error) {
