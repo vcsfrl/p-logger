@@ -48,7 +48,7 @@ func (f *BuilderFixture) TestBuildOneOutputWriter() {
 			{
 				Name: "text_file",
 				Params: map[string]interface{}{
-					"path": "./../var/log/test.log",
+					"path": "./../var/log/example.log",
 				},
 			},
 		},
@@ -72,7 +72,7 @@ func (f *BuilderFixture) TestBuildTwoOutputWriters() {
 			{
 				Name: "text_file",
 				Params: map[string]interface{}{
-					"path": "./../var/log/test.log",
+					"path": "./../var/log/example.log",
 				},
 			}, {
 				Name: "text_stdout",
@@ -101,7 +101,7 @@ func (f *BuilderFixture) TestBuildMinSeverityAndDefaultTags() {
 			{
 				Name: "text_file",
 				Params: map[string]interface{}{
-					"path": "./../var/log/test.log",
+					"path": "./../var/log/example.log",
 				},
 			}, {
 				Name: "text_stdout",

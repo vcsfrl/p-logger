@@ -31,23 +31,23 @@ func (f *LevelLoggerFixture) Teardown() {
 }
 
 func (f *LevelLoggerFixture) TestLevels() {
-	f.logger.Info("test")
-	f.So(f.memoryWriter.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test :: [] :: [tag1 tag2] \n")
+	f.logger.Info("example")
+	f.So(f.memoryWriter.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: example :: [] :: [tag1 tag2] \n")
 }
 
 func (f *LevelLoggerFixture) TestDebug() {
-	f.logger.Debug("test")
-	f.So(f.memoryWriter.String(), should.Equal, "2024-05-01T03:12:03Z :: DEBUG :: test :: [] :: [tag1 tag2] \n")
+	f.logger.Debug("example")
+	f.So(f.memoryWriter.String(), should.Equal, "2024-05-01T03:12:03Z :: DEBUG :: example :: [] :: [tag1 tag2] \n")
 }
 
 func (f *LevelLoggerFixture) TestWarn() {
-	f.logger.Warn("test")
-	f.So(f.memoryWriter.String(), should.Equal, "2024-05-01T03:12:03Z :: WARN :: test :: [] :: [tag1 tag2] \n")
+	f.logger.Warn("example")
+	f.So(f.memoryWriter.String(), should.Equal, "2024-05-01T03:12:03Z :: WARN :: example :: [] :: [tag1 tag2] \n")
 }
 
 func (f *LevelLoggerFixture) TestError() {
-	f.logger.Error("test")
-	f.So(f.memoryWriter.String(), should.Equal, "2024-05-01T03:12:03Z :: ERROR :: test :: [] :: [tag1 tag2] \n")
+	f.logger.Error("example")
+	f.So(f.memoryWriter.String(), should.Equal, "2024-05-01T03:12:03Z :: ERROR :: example :: [] :: [tag1 tag2] \n")
 }
 
 func (f *LevelLoggerFixture) TestTransaction() {

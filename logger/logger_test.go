@@ -43,7 +43,7 @@ func (f *LoggerFixture) TestConstructorDefaults() {
 
 func (f *LoggerFixture) TestLog() {
 	f.logger.Log(SeverityInfo, Message{
-		Content: "test",
+		Content: "example",
 		Attributes: map[string]string{
 			"attr-key-1": "attr-value1",
 			"attr-key-2": "attr-value2",
@@ -51,7 +51,7 @@ func (f *LoggerFixture) TestLog() {
 		Tags: []string{"tag1", "tag2"},
 	})
 
-	f.So(f.memoryWriter.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test :: [attr-key-1:attr-value1 attr-key-2:attr-value2] :: [tag1 tag2] \n")
+	f.So(f.memoryWriter.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: example :: [attr-key-1:attr-value1 attr-key-2:attr-value2] :: [tag1 tag2] \n")
 }
 
 func (f *LoggerFixture) TestLogDefaultSeverity() {

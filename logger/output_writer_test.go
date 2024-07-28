@@ -25,13 +25,13 @@ func (f *MultiOutputWriterFixture) TestWriteSingle() {
 		Timestamp: mockNow()(),
 		Severity:  SeverityDebug,
 		Message: Message{
-			Content: "test message",
+			Content: "example message",
 		},
 	})
 
 	defer multiWriter.Close()
 
-	f.So(buffer1.String(), should.Equal, "2024-05-01T03:12:03Z :: DEBUG :: test message :: [] :: [] \n")
+	f.So(buffer1.String(), should.Equal, "2024-05-01T03:12:03Z :: DEBUG :: example message :: [] :: [] \n")
 }
 
 func (f *MultiOutputWriterFixture) TestWriteTwo() {
@@ -47,12 +47,12 @@ func (f *MultiOutputWriterFixture) TestWriteTwo() {
 		Timestamp: mockNow()(),
 		Severity:  SeverityDebug,
 		Message: Message{
-			Content: "test message",
+			Content: "example message",
 		},
 	})
 
 	defer multiWriter.Close()
 
-	f.So(buffer1.String(), should.Equal, "2024-05-01T03:12:03Z :: DEBUG :: test message :: [] :: [] \n")
-	f.So(buffer2.String(), should.Equal, "2024-05-01T03:12:03Z :: DEBUG :: test message :: [] :: [] \n")
+	f.So(buffer1.String(), should.Equal, "2024-05-01T03:12:03Z :: DEBUG :: example message :: [] :: [] \n")
+	f.So(buffer2.String(), should.Equal, "2024-05-01T03:12:03Z :: DEBUG :: example message :: [] :: [] \n")
 }
