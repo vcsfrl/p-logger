@@ -20,6 +20,7 @@ func (f *LevelLoggerFixture) Setup() {
 	f.memoryWriter = new(MemoryWriter)
 	f.logger = NewLevelLogger(NewLogger(&TextOutputWriter{writer: f.memoryWriter}))
 	f.logger.DefaultTags = []string{"tag1", "tag2"}
+	f.logger.MinSeverity = SeverityDebug
 	// Mock the time.Now function
 	f.logger.now = mockNow()
 }

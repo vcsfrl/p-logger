@@ -10,5 +10,6 @@
       "name": "text_stdout"
     }
   ],
-  "default_tags": ["tag1", "tag2"]
+  "default_tags": ["tag1", "tag2"],
+  "min_severity": "INFO"
 }

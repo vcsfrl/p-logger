@@ -2,15 +2,27 @@ package logger
 
 import "time"
 
-type Severity string
+type Severity int
 
 const (
-	SeverityDebug   Severity = "DEBUG"
-	SeverityInfo    Severity = "INFO"
-	SeverityWarning Severity = "WARN"
-	SeverityError   Severity = "ERROR"
-	SeverityDefault          = SeverityInfo
+	SeverityDebug Severity = iota + 1
+	SeverityInfo
+	SeverityWarning
+	SeverityError
+	SeverityDefault = SeverityInfo
 )
+
+var severityMap = map[string]Severity{
+	"DEBUG":   SeverityDebug,
+	"INFO":    SeverityInfo,
+	"WARN":    SeverityWarning,
+	"ERROR":   SeverityError,
+	"DEFAULT": SeverityDefault,
+}
+
+func (s Severity) String() string {
+	return [...]string{"DEBUG", "INFO", "WARN", "ERROR"}[s-1]
+}
 
 var severities = []Severity{SeverityDefault, SeverityDebug, SeverityInfo, SeverityWarning, SeverityError}
 
@@ -38,4 +50,5 @@ type ConfigWriter struct {
 type Config struct {
 	Writers     []ConfigWriter `json:"writers"`
 	DefaultTags []string       `json:"default_tags"`
+	MinSeverity string         `json:"min_severity"`
 }

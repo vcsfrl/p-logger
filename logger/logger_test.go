@@ -56,16 +56,30 @@ func (f *LoggerFixture) TestLog() {
 
 func (f *LoggerFixture) TestLogDefaultSeverity() {
 	// Test severity default on invalid value.
-	f.logger.Log("", Message{
+	f.logger.Log(12, Message{
 		Content: "test1",
 	})
 	f.So(f.memoryWriter.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test1 :: [] :: [] \n")
 }
 
+func (f *LoggerFixture) TestLogMinSeverity() {
+	f.logger.MinSeverity = SeverityWarning
+	// Severity info should be skipped.
+	f.logger.Log(SeverityInfo, Message{
+		Content: "test1",
+	})
+	f.So(f.memoryWriter.String(), should.Equal, "")
+
+	f.logger.Log(SeverityWarning, Message{
+		Content: "test2",
+	})
+	f.So(f.memoryWriter.String(), should.Equal, "2024-05-01T03:12:03Z :: WARN :: test2 :: [] :: [] \n")
+}
+
 func (f *LoggerFixture) TestLogDefaultTags() {
 	f.logger.DefaultTags = []string{"tag1", "tag2"}
 	// Test severity default on invalid value.
-	f.logger.Log("", Message{
+	f.logger.Log(SeverityInfo, Message{
 		Content: "test1",
 	})
 	f.So(f.memoryWriter.String(), should.Equal, "2024-05-01T03:12:03Z :: INFO :: test1 :: [] :: [tag1 tag2] \n")

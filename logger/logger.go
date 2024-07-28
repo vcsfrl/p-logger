@@ -13,6 +13,7 @@ type Logger struct {
 	now func() time.Time
 
 	DefaultTags []string
+	MinSeverity Severity
 }
 
 // Log builds a LogMessage and sends it to the outputWriter writer.
@@ -24,6 +25,10 @@ func (l *Logger) Log(severity Severity, message Message) {
 	}
 
 	message.Tags = append(message.Tags, l.DefaultTags...)
+
+	if severity < l.MinSeverity {
+		return
+	}
 
 	// Build the log message. Timestamp is set by the logger.
 	logMessage := LogMessage{
@@ -50,5 +55,6 @@ func NewLogger(output OutputWriter) *Logger {
 	return &Logger{
 		outputWriter: output,
 		now:          time.Now,
+		MinSeverity:  SeverityDefault,
 	}
 }
