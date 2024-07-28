@@ -1,0 +1,17 @@
+services:
+  p_logger:
+    build:
+      context: .
+      args:
+        - username=${CONTAINER_USERNAME}
+        - exec_user_id=${CONTAINER_EXEC_USER_ID}
+    container_name: p_logger
+    image: p_logger
+    restart: "unless-stopped"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - .:/home/logger/src:shared
+    user: ${CONTAINER_EXEC_USER_ID}:${CONTAINER_EXEC_USER_ID}
+    env_file:
+      - .env
+
