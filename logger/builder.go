@@ -29,12 +29,14 @@ func Build(config Config) (*Logger, error) {
 		outputWriter = outputWriters[0]
 	}
 
+	// If there are multiple writers, we need to use MultiOutputWriter.
 	if len(outputWriters) > 1 {
 		outputWriter = &MultiOutputWriter{writers: outputWriters}
 	}
 
 	logger := NewLogger(outputWriter)
 
+	// Set the logger's properties based on the configuration.
 	if minSeverity, isSet := severityMap[config.MinSeverity]; isSet {
 		logger.MinSeverity = minSeverity
 	}
