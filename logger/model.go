@@ -16,6 +16,7 @@ var severityMap = map[string]Severity{
 	"DEBUG":   SeverityDebug,
 	"INFO":    SeverityInfo,
 	"WARN":    SeverityWarning,
+	"WARNING": SeverityWarning,
 	"ERROR":   SeverityError,
 	"DEFAULT": SeverityDefault,
 }

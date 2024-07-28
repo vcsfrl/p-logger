@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func Build(config Config) (*Logger, error) {
@@ -34,10 +35,11 @@ func Build(config Config) (*Logger, error) {
 		outputWriter = &MultiOutputWriter{writers: outputWriters}
 	}
 
+	// Create the logger with the output writer.
 	logger := NewLogger(outputWriter)
 
 	// Set the logger's properties based on the configuration.
-	if minSeverity, isSet := severityMap[config.MinSeverity]; isSet {
+	if minSeverity, isSet := severityMap[strings.ToUpper(config.MinSeverity)]; isSet {
 		logger.MinSeverity = minSeverity
 	}
 	logger.DefaultTags = config.DefaultTags
@@ -57,4 +59,13 @@ func BuildFromJson(jsonFileName string) (*Logger, error) {
 	}
 
 	return Build(config)
+}
+
+func BuildLeveledFromJson(jsonFileName string) (*LevelLogger, error) {
+	logger, err := BuildFromJson(jsonFileName)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewLevelLogger(logger), nil
 }
