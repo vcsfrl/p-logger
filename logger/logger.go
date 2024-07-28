@@ -8,9 +8,9 @@ import (
 
 type Logger struct {
 	outputWriter OutputWriter
-	// now is a function that returns the current time. It is used to set the timestamp of the log message.
+	// Now is a function that returns the current time. It is used to set the timestamp of the log message.
 	// It is defined as a property so that it can be mocked in tests.
-	now func() time.Time
+	Now func() time.Time
 
 	DefaultTags []string
 	MinSeverity Severity
@@ -32,7 +32,7 @@ func (l *Logger) Log(severity Severity, message Message) {
 
 	// Build the log message. Timestamp is set by the logger.
 	logMessage := LogMessage{
-		Timestamp: l.now(),
+		Timestamp: l.Now(),
 		Severity:  severity,
 		Message:   message,
 	}
@@ -54,7 +54,7 @@ func NewLogger(output OutputWriter) *Logger {
 
 	return &Logger{
 		outputWriter: output,
-		now:          time.Now,
+		Now:          time.Now,
 		MinSeverity:  SeverityDefault,
 	}
 }

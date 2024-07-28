@@ -22,7 +22,7 @@ func (f *LoggerFixture) Setup() {
 	f.memoryWriter = new(MemoryWriter)
 	f.logger = NewLogger(&TextOutputWriter{writer: f.memoryWriter})
 	// Mock the time.Now function
-	f.logger.now = mockNow()
+	f.logger.Now = mockNow()
 }
 
 func (f *LoggerFixture) Teardown() {

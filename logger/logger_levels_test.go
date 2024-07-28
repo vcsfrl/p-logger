@@ -22,7 +22,7 @@ func (f *LevelLoggerFixture) Setup() {
 	f.logger.DefaultTags = []string{"tag1", "tag2"}
 	f.logger.MinSeverity = SeverityDebug
 	// Mock the time.Now function
-	f.logger.now = mockNow()
+	f.logger.Now = mockNow()
 }
 
 func (f *LevelLoggerFixture) Teardown() {
