@@ -1,0 +1,18 @@
+{
+  "writers": [
+    {
+      "name": "text_file",
+      "params": {
+        "path": "./var/log/test.log"
+      }
+    },
+    {
+      "name": "json_stdout"
+    },
+    {
+      "name": "text_stdout"
+    }
+  ],
+  "default_tags": ["tag1", "tag2", "tag3"],
+  "min_severity": "INFO"
+}

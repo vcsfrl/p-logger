@@ -1,15 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"plentysystems-logger/logger"
 )
 
 func init() {
 	// Register output writer without changes to logger lib.
-	logger.RegisterOutputWriter("json_file", NewJsonOutputWriter)
+	logger.RegisterOutputWriter("json_stdout", NewJsonOutputWriter)
 }
 
 func main() {
@@ -20,35 +20,36 @@ func main() {
 			Content:    "Default setup!",
 			Attributes: map[string]string{"key1": "value1"},
 			Tags:       []string{"tag1"},
+			// Skipped because of min_severity defaults to INFO.
 		},
 	)
 
 	pLogLevel := logger.NewLevelLogger(pLog)
+	defer pLogLevel.Close()
 	pLogLevel.Info("Info message")
-	// Skipped because of min_severity defaults to INFO.
 	pLogLevel.Debug("Debug message")
 	pLogLevel.Warn("Warn message")
 	pLogLevel.Error("Error message")
 	pLogLevel.Transaction("123-ert", map[string]string{"key1": "value1"})
-	_ = pLogLevel.Close()
+
+	pLogLevelConfig, err := logger.BuildLeveledFromJson("./cmd/example/config.json")
+	fmt.Println(err)
+	pLogLevelConfig.Info("Info message")
+	pLogLevelConfig.Transaction("11-22-33", map[string]string{"key1": "value1"})
 }
 
 type JsonOutputWriter struct {
-	writer io.WriteCloser
+	encoder *json.Encoder
 }
 
 func NewJsonOutputWriter(params map[string]any) (logger.OutputWriter, error) {
-	file, err := os.OpenFile(fmt.Sprintf("%s", "./../../var/log/example.sjon"), os.O_APPEND|os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
-	if err != nil {
-		return nil, fmt.Errorf("NEW JSON WRITER: could not open log file: %w", err)
-	}
-	return &JsonOutputWriter{file}, nil
+	return &JsonOutputWriter{encoder: json.NewEncoder(os.Stdout)}, nil
 }
 
 func (j *JsonOutputWriter) Write(message logger.LogMessage) {
-
+	_ = j.encoder.Encode(message)
 }
 
 func (j *JsonOutputWriter) Close() error {
-	return j.writer.Close()
+	return nil
 }
