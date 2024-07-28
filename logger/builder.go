@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// Build creates a new logger based on the provided configuration.
 func Build(config Config) (*Logger, error) {
 	var outputWriters []OutputWriter
 	for _, configWriter := range config.Writers {
@@ -47,6 +48,7 @@ func Build(config Config) (*Logger, error) {
 	return logger, nil
 }
 
+// BuildFromJson creates a new logger based on the provided JSON configuration file.
 func BuildFromJson(jsonFileName string) (*Logger, error) {
 	jsonData, err := os.ReadFile(jsonFileName)
 	if err != nil {
@@ -61,6 +63,7 @@ func BuildFromJson(jsonFileName string) (*Logger, error) {
 	return Build(config)
 }
 
+// BuildLeveledFromJson creates a new leveled logger based on the provided JSON configuration file.
 func BuildLeveledFromJson(jsonFileName string) (*LevelLogger, error) {
 	logger, err := BuildFromJson(jsonFileName)
 	if err != nil {
