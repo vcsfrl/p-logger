@@ -7,7 +7,7 @@ import (
 )
 
 func TestMultiOutputWriter(t *testing.T) {
-	gunit.Run(new(MultiOutputWriterFixture), t, gunit.Options.AllSequential())
+	gunit.Run(new(MultiOutputWriterFixture), t)
 }
 
 type MultiOutputWriterFixture struct {

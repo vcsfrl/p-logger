@@ -7,7 +7,7 @@ import (
 )
 
 func TestLevelLogger(t *testing.T) {
-	gunit.Run(new(LevelLoggerFixture), t, gunit.Options.AllSequential())
+	gunit.Run(new(LevelLoggerFixture), t)
 }
 
 type LevelLoggerFixture struct {
