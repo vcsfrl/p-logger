@@ -9,5 +9,6 @@
     {
       "name": "text_stdout"
     }
-  ]
+  ],
+  "default_tags": ["tag1", "tag2"]
 }

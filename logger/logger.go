@@ -11,6 +11,8 @@ type Logger struct {
 	// now is a function that returns the current time. It is used to set the timestamp of the log message.
 	// It is defined as a property so that it can be mocked in tests.
 	now func() time.Time
+
+	DefaultTags []string
 }
 
 // Log builds a LogMessage and sends it to the outputWriter writer.
@@ -20,6 +22,8 @@ func (l *Logger) Log(severity Severity, message Message) {
 	if !slices.Contains(severities, severity) {
 		severity = SeverityDefault
 	}
+
+	message.Tags = append(message.Tags, l.DefaultTags...)
 
 	// Build the log message. Timestamp is set by the logger.
 	logMessage := LogMessage{

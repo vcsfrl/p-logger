@@ -9,7 +9,7 @@ const (
 	SeverityInfo    Severity = "INFO"
 	SeverityWarning Severity = "WARN"
 	SeverityError   Severity = "ERROR"
-	SeverityDefault Severity = SeverityInfo
+	SeverityDefault          = SeverityInfo
 )
 
 var severities = []Severity{SeverityDefault, SeverityDebug, SeverityInfo, SeverityWarning, SeverityError}
@@ -36,5 +36,6 @@ type ConfigWriter struct {
 
 // Config is a configuration structure for building the logger.
 type Config struct {
-	Writers []ConfigWriter `json:"writers"`
+	Writers     []ConfigWriter `json:"writers"`
+	DefaultTags []string       `json:"default_tags"`
 }
