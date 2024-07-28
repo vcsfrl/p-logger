@@ -3,7 +3,7 @@ services:
     build:
       context: .
       args:
-        - username=${CONTAINER_USERNAME}
+        - username=logger
         - exec_user_id=${CONTAINER_EXEC_USER_ID}
     container_name: p_logger
     image: p_logger

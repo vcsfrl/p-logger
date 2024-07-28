@@ -19,16 +19,20 @@ test-cover: test ## Test coverage.
 
 
 dc-install: ## Install with docker compose.
-	if [ ! -f .env ]; then echo "CONTAINER_EXEC_USER_ID=`id -u`" >> .env; echo "CONTAINER_USERNAME=${USER}" >> .env; fi
+	if [ ! -f .env ]; then echo "CONTAINER_EXEC_USER_ID=`id -u`" >> .env; fi
 	docker compose build;
 	docker compose run p_logger make install
+	docker compose down --remove-orphans
 
 dc-example: ## Run example with docker compose.
 	docker compose run p_logger make run-example
+	docker compose down --remove-orphans
 
 dc-test: ## Run all tests with docker compose.
 	docker compose run p_logger make test
+	docker compose down --remove-orphans
 
 dc-test-cover: ## Test coverage with docker compose.
 	docker compose run p_logger make test-cover
+	docker compose down --remove-orphans
 
