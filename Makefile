@@ -8,7 +8,7 @@ install: ## Install dependencies.
 	go mod vendor
 	go mod tidy
 
-example: ## Run example.
+run-example: ## Run example.
 	go run example/main.go
 
 test: ## Run all tests.

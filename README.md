@@ -15,6 +15,9 @@ make test
 
 # run tests with coverage
 make test-cover
+
+# run example code
+make run-example
 ```
 
 ## Requirements
