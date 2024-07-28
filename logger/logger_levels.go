@@ -31,3 +31,7 @@ func (l *LevelLogger) Transaction(id string, attributes map[string]string) {
 	message.Attributes["transaction_id"] = id
 	l.Log(SeverityDefault, message)
 }
+
+func (l *LevelLogger) Close() error {
+	return l.outputWriter.Close()
+}
