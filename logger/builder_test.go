@@ -34,9 +34,15 @@ func (f *BuilderFixture) TestBuildEmptyConfig() {
 	config := Config{}
 
 	logger, err := f.builder.FromConfig(config)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		f.So(err, should.BeNil)
+	}()
 
 	f.So(logger, should.NotBeNil)
+	if logger == nil {
+		return
+	}
 	writer := logger.outputWriter.(*TextOutputWriter)
 
 	f.So(logger, should.NotBeNil)
@@ -58,7 +64,10 @@ func (f *BuilderFixture) TestBuildOneOutputWriter() {
 	}
 
 	logger, err := f.builder.FromConfig(config)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		f.So(err, should.BeNil)
+	}()
 
 	f.So(logger, should.NotBeNil)
 
@@ -84,7 +93,10 @@ func (f *BuilderFixture) TestBuildTwoOutputWriters() {
 	}
 
 	logger, err := f.builder.FromConfig(config)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		f.So(err, should.BeNil)
+	}()
 
 	f.So(logger, should.NotBeNil)
 	f.So(err, should.BeNil)
@@ -116,7 +128,10 @@ func (f *BuilderFixture) TestBuildMinSeverityAndDefaultTags() {
 	}
 
 	logger, err := f.builder.FromConfig(config)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		f.So(err, should.BeNil)
+	}()
 
 	f.So(logger, should.NotBeNil)
 	f.So(err, should.BeNil)
@@ -126,7 +141,10 @@ func (f *BuilderFixture) TestBuildMinSeverityAndDefaultTags() {
 
 func (f *BuilderFixture) TestBuildFromJson() {
 	logger, err := f.builder.FromJson("testdata/example_config_valid.json")
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		f.So(err, should.BeNil)
+	}()
 
 	f.So(err, should.BeNil)
 	f.So(logger, should.NotBeNil)
@@ -146,7 +164,10 @@ func (f *BuilderFixture) TestBuildFromJson() {
 
 func (f *BuilderFixture) TestBuildLeveledFromJson() {
 	logger, err := f.builder.LeveledFromJson("testdata/example_config_valid.json")
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		f.So(err, should.BeNil)
+	}()
 
 	f.So(err, should.BeNil)
 	f.So(logger, should.NotBeNil)
