@@ -14,12 +14,12 @@ func TestLogger(t *testing.T) {
 
 type LoggerFixture struct {
 	*gunit.Fixture
-	memoryWriter *MemoryWriter
+	memoryWriter *MockWriter
 	logger       *Logger
 }
 
 func (f *LoggerFixture) Setup() {
-	f.memoryWriter = new(MemoryWriter)
+	f.memoryWriter = new(MockWriter)
 	f.logger = NewLogger(&TextOutputWriter{writer: f.memoryWriter})
 	// Mock the time.Now function
 	f.logger.Now = mockNow()

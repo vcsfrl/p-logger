@@ -15,7 +15,7 @@ type MultiOutputWriterFixture struct {
 }
 
 func (f *MultiOutputWriterFixture) TestWriteSingle() {
-	buffer1 := new(MemoryWriter)
+	buffer1 := new(MockWriter)
 
 	writer1 := &TextOutputWriter{writer: buffer1}
 
@@ -35,8 +35,8 @@ func (f *MultiOutputWriterFixture) TestWriteSingle() {
 }
 
 func (f *MultiOutputWriterFixture) TestWriteTwo() {
-	buffer1 := new(MemoryWriter)
-	buffer2 := new(MemoryWriter)
+	buffer1 := new(MockWriter)
+	buffer2 := new(MockWriter)
 
 	writer1 := &TextOutputWriter{writer: buffer1}
 	writer2 := &TextOutputWriter{writer: buffer2}

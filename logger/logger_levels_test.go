@@ -12,12 +12,12 @@ func TestLevelLogger(t *testing.T) {
 
 type LevelLoggerFixture struct {
 	*gunit.Fixture
-	memoryWriter *MemoryWriter
+	memoryWriter *MockWriter
 	logger       *LevelLogger
 }
 
 func (f *LevelLoggerFixture) Setup() {
-	f.memoryWriter = new(MemoryWriter)
+	f.memoryWriter = new(MockWriter)
 	f.logger = NewLevelLogger(NewLogger(&TextOutputWriter{writer: f.memoryWriter}))
 	f.logger.DefaultTags = []string{"tag1", "tag2"}
 	f.logger.MinSeverity = SeverityDebug
