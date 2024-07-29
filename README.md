@@ -1,4 +1,4 @@
-# plentysystems-logger
+# p-logger
 Code challenge - Logger
 
 ### Usage
