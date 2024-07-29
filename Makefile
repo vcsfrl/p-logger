@@ -12,7 +12,7 @@ run-example: ## Run example.
 	go run example/main.go
 
 test: ## Run all tests.
-	go test ./... -race -cpu 24 -cover -coverprofile=var/tests/coverage.out;
+	go test ./logger -race -cpu 24 -cover -coverprofile=var/tests/coverage.out -v;
 
 test-cover: test ## Test coverage.
 	go tool cover -func=var/tests/coverage.out
