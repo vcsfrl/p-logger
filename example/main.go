@@ -54,6 +54,7 @@ func main() {
 	// 2024-07-28T16:33:39+03:00 :: INFO :: Transaction :: [key1:value1 transaction_id:11-22-33] :: [tag1 tag2 tag3]
 }
 
+// JsonOutputWriter is a new driver defined outside the logger package.
 type JsonOutputWriter struct {
 	encoder *json.Encoder
 }
