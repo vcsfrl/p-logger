@@ -24,11 +24,11 @@ func (l *Logger) Log(severity Severity, message Message) {
 		severity = SeverityDefault
 	}
 
-	message.Tags = append(message.Tags, l.DefaultTags...)
-
 	if severity < l.MinSeverity {
 		return
 	}
+
+	message.Tags = append(message.Tags, l.DefaultTags...)
 
 	// Build the log message. Timestamp is set by the logger.
 	logMessage := LogMessage{
