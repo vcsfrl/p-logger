@@ -20,7 +20,6 @@ func main() {
 			Content:    "Default setup!",
 			Attributes: map[string]string{"key1": "value1"},
 			Tags:       []string{"tag1"},
-			// Skipped because of min_severity defaults to INFO.
 		},
 	)
 

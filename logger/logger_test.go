@@ -70,6 +70,7 @@ func (f *LoggerFixture) TestLogMinSeverity() {
 	})
 	f.So(f.memoryWriter.String(), should.Equal, "")
 
+	// Severity warning should be logged.
 	f.logger.Log(SeverityWarning, Message{
 		Content: "test2",
 	})

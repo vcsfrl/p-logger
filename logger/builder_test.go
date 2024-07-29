@@ -15,12 +15,15 @@ func TestBuilder(t *testing.T) {
 type BuilderFixture struct {
 	*gunit.Fixture
 	originalStdout *os.File
+	builder        *Builder
 }
 
 func (f *BuilderFixture) Setup() {
+	// Mock stdout.
 	f.originalStdout = os.Stdout
 	_, w, _ := os.Pipe()
 	os.Stdout = w
+	f.builder = new(Builder)
 }
 
 func (f *BuilderFixture) Teardown() {
@@ -30,7 +33,7 @@ func (f *BuilderFixture) Teardown() {
 func (f *BuilderFixture) TestBuildEmptyConfig() {
 	config := Config{}
 
-	logger, err := Build(config)
+	logger, err := f.builder.FromConfig(config)
 	defer logger.Close()
 
 	f.So(logger, should.NotBeNil)
@@ -54,7 +57,7 @@ func (f *BuilderFixture) TestBuildOneOutputWriter() {
 		},
 	}
 
-	logger, err := Build(config)
+	logger, err := f.builder.FromConfig(config)
 	defer logger.Close()
 
 	f.So(logger, should.NotBeNil)
@@ -80,7 +83,7 @@ func (f *BuilderFixture) TestBuildTwoOutputWriters() {
 		},
 	}
 
-	logger, err := Build(config)
+	logger, err := f.builder.FromConfig(config)
 	defer logger.Close()
 
 	f.So(logger, should.NotBeNil)
@@ -95,6 +98,7 @@ func (f *BuilderFixture) TestBuildTwoOutputWriters() {
 	stdoutWriter := multiOutputWriter.writers[1].(*TextOutputWriter)
 	f.So(stdoutWriter.writer, should.Equal, os.Stdout)
 }
+
 func (f *BuilderFixture) TestBuildMinSeverityAndDefaultTags() {
 	config := Config{
 		Writers: []ConfigWriter{
@@ -111,7 +115,7 @@ func (f *BuilderFixture) TestBuildMinSeverityAndDefaultTags() {
 		DefaultTags: []string{"tag1", "tag2"},
 	}
 
-	logger, err := Build(config)
+	logger, err := f.builder.FromConfig(config)
 	defer logger.Close()
 
 	f.So(logger, should.NotBeNil)
@@ -121,7 +125,27 @@ func (f *BuilderFixture) TestBuildMinSeverityAndDefaultTags() {
 }
 
 func (f *BuilderFixture) TestBuildFromJson() {
-	logger, err := BuildFromJson("testdata/example_config_valid.json")
+	logger, err := f.builder.FromJson("testdata/example_config_valid.json")
+	defer logger.Close()
+
+	f.So(err, should.BeNil)
+	f.So(logger, should.NotBeNil)
+	f.So(reflect.TypeOf(logger.outputWriter).String(), should.Equal, "*logger.MultiOutputWriter")
+	multiOutputWriter := logger.outputWriter.(*MultiOutputWriter)
+
+	fileWriter := multiOutputWriter.writers[0].(*TextOutputWriter)
+	f.So(reflect.TypeOf(fileWriter.writer).String(), should.Equal, "*os.File")
+	f.So(fileWriter.writer, should.NotEqual, os.Stdout)
+
+	stdoutWriter := multiOutputWriter.writers[1].(*TextOutputWriter)
+	f.So(stdoutWriter.writer, should.Equal, os.Stdout)
+
+	f.So(logger.MinSeverity, should.Equal, SeverityWarning)
+	f.So(logger.DefaultTags, should.Resemble, []string{"tag1", "tag2", "tag3"})
+}
+
+func (f *BuilderFixture) TestBuildLeveledFromJson() {
+	logger, err := f.builder.LeveledFromJson("testdata/example_config_valid.json")
 	defer logger.Close()
 
 	f.So(err, should.BeNil)
@@ -141,12 +165,12 @@ func (f *BuilderFixture) TestBuildFromJson() {
 }
 
 func (f *BuilderFixture) TestBuildFromJsonInvalidData() {
-	logger, err := BuildFromJson("testdata/example_config_invalid.json")
+	logger, err := f.builder.FromJson("testdata/example_config_invalid.json")
 
 	f.So(err, should.NotBeNil)
 	f.So(logger, should.BeNil)
 
-	logger, err = BuildFromJson("testdata/example_config_not_exists.json")
+	logger, err = f.builder.FromJson("testdata/example_config_not_exists.json")
 
 	f.So(err, should.NotBeNil)
 	f.So(logger, should.BeNil)
