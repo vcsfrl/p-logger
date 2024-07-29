@@ -10,6 +10,7 @@ import (
 type Builder struct {
 }
 
+// FromConfig creates a new logger based on the provided configuration.
 func (b *Builder) FromConfig(config Config) (*Logger, error) {
 	outputWriters, err := b.getOutputWriters(config)
 	if err != nil {
@@ -67,6 +68,7 @@ func (b *Builder) getOutputWriters(config Config) ([]OutputWriter, error) {
 	return outputWriters, nil
 }
 
+// FromJson creates a new logger based on the provided JSON configuration file.
 func (b *Builder) FromJson(jsonFileName string) (*Logger, error) {
 	jsonData, err := os.ReadFile(jsonFileName)
 	if err != nil {
@@ -81,6 +83,7 @@ func (b *Builder) FromJson(jsonFileName string) (*Logger, error) {
 	return b.FromConfig(config)
 }
 
+// LeveledFromJson creates a new leveled logger based on the provided JSON configuration file.
 func (b *Builder) LeveledFromJson(jsonFileName string) (*LevelLogger, error) {
 	logger, err := b.FromJson(jsonFileName)
 	if err != nil {
